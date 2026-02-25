@@ -1,0 +1,6 @@
+# Environment files (keep .env.example for reference)
+.env
+
+# OS files
+.DS_Store
+Thumbs.db

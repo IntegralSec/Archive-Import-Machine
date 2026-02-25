@@ -1,0 +1,100 @@
+### Test Batches API Endpoints
+
+### Variables
+@BACKEND_API_BASE = http://localhost:5000
+@API_TOKEN = your_auth_token_here
+
+### 1. Create a new batch
+POST {{BACKEND_API_BASE}}/api/batches
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "source_system": "email-import-system",
+  "created_by": "admin",
+  "manifest_sha256": "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456",
+  "status": 0,
+  "file_count_expected": 100,
+  "file_count_discovered": 0,
+  "file_count_ingested": 0,
+  "metadata": {
+    "version": "1.0",
+    "options": {
+      "compression": "zip",
+      "encryption": false
+    },
+    "description": "Test batch for EML file import"
+  }
+}
+
+### 2. Get all batches with pagination
+GET {{BACKEND_API_BASE}}/api/batches?page=1&limit=10
+Authorization: Bearer {{API_TOKEN}}
+
+### 3. Get all batches with filtering
+GET {{BACKEND_API_BASE}}/api/batches?status=0&source_system=email-import-system
+Authorization: Bearer {{API_TOKEN}}
+
+### 4. Get a specific batch by ID (replace with actual batch ID)
+GET {{BACKEND_API_BASE}}/api/batches/{{batch_id}}
+Authorization: Bearer {{API_TOKEN}}
+
+### 5. Update batch status
+PATCH {{BACKEND_API_BASE}}/api/batches/{{batch_id}}/status
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "status": 1
+}
+
+### 6. Update batch counters
+PATCH {{BACKEND_API_BASE}}/api/batches/{{batch_id}}/counters
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "file_count_discovered": 95,
+  "file_count_ingested": 50
+}
+
+### 7. Update entire batch
+PUT {{BACKEND_API_BASE}}/api/batches/{{batch_id}}
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "source_system": "email-import-system-v2",
+  "status": 2,
+  "file_count_expected": 100,
+  "file_count_discovered": 95,
+  "file_count_ingested": 95,
+  "metadata": {
+    "version": "1.1",
+    "options": {
+      "compression": "zip",
+      "encryption": false
+    },
+    "description": "Updated test batch for EML file import",
+    "completed_at": "2024-01-15T10:30:00Z"
+  }
+}
+
+### 8. Delete a batch (only if not running)
+DELETE {{BACKEND_API_BASE}}/api/batches/{{batch_id}}
+Authorization: Bearer {{API_TOKEN}}
+
+### 9. Test validation - invalid status
+POST {{BACKEND_API_BASE}}/api/batches
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "source_system": "test-system",
+  "status": 99,
+  "file_count_expected": -1
+}
+
+### 10. Test validation - invalid batch ID
+GET {{BACKEND_API_BASE}}/api/batches/invalid-uuid
+Authorization: Bearer {{API_TOKEN}}

@@ -1,0 +1,34 @@
+### Test S3 Configuration Save
+### This file demonstrates how the frontend saves S3 credentials to the backend
+
+### 1. First, authenticate to get a token
+POST {{backend_url}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### 2. Save configuration with S3 credentials
+PUT {{backend_url}}/api/config
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "archiveWebUI": "https://archive.example.com",
+  "apiToken": "PWSAK2testToken123=",
+  "customerGUID": "test-guid-123",
+  "s3Settings": {
+    "accessKeyId": "AKIATEST123456789",
+    "secretAccessKey": "testSecretKey123456789"
+  }
+}
+
+### 3. Retrieve the saved configuration to verify
+GET {{backend_url}}/api/config
+Authorization: Bearer {{auth_token}}
+
+### Variables (set these in your REST client)
+# backend_url: http://localhost:5000
+# auth_token: (will be set from login response)

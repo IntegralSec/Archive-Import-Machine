@@ -1,0 +1,69 @@
+### Test Logging API Endpoints
+
+### Get all available log files
+GET http://localhost:5000/api/logs/files
+Authorization: Bearer {{authToken}}
+
+### Get logs for auth route (last 50 entries)
+GET http://localhost:5000/api/logs/auth?limit=50
+Authorization: Bearer {{authToken}}
+
+### Get logs for health route (last 100 entries)
+GET http://localhost:5000/api/logs/health?limit=100
+Authorization: Bearer {{authToken}}
+
+### Get logs for config route
+GET http://localhost:5000/api/logs/config?limit=25
+Authorization: Bearer {{authToken}}
+
+### Get logs for ingestion-points route
+GET http://localhost:5000/api/logs/ingestion-points?limit=25
+Authorization: Bearer {{authToken}}
+
+### Get logs for import-jobs route
+GET http://localhost:5000/api/logs/import-jobs?limit=25
+Authorization: Bearer {{authToken}}
+
+### Get logs for import-job-batches route
+GET http://localhost:5000/api/logs/import-job-batches?limit=25
+Authorization: Bearer {{authToken}}
+
+### Get logs for s3-buckets route
+GET http://localhost:5000/api/logs/s3-buckets?limit=25
+Authorization: Bearer {{authToken}}
+
+### Get logs for aws-auth route
+GET http://localhost:5000/api/logs/aws-auth?limit=25
+Authorization: Bearer {{authToken}}
+
+### Get logs for root route
+GET http://localhost:5000/api/logs/root?limit=25
+Authorization: Bearer {{authToken}}
+
+### Get log statistics overview
+GET http://localhost:5000/api/logs/stats/overview
+Authorization: Bearer {{authToken}}
+
+### Clear logs for auth route
+DELETE http://localhost:5000/api/logs/auth
+Authorization: Bearer {{authToken}}
+
+### Clear logs for health route
+DELETE http://localhost:5000/api/logs/health
+Authorization: Bearer {{authToken}}
+
+### Test endpoints to generate logs
+
+### Health check (should create health.log)
+GET http://localhost:5000/api/health
+
+### Root endpoint (should create root.log)
+GET http://localhost:5000/
+
+### Auth endpoint (should create auth.log)
+GET http://localhost:5000/api/auth/me
+Authorization: Bearer {{authToken}}
+
+### Config endpoint (should create config.log)
+GET http://localhost:5000/api/config
+Authorization: Bearer {{authToken}}

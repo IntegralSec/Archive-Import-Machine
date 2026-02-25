@@ -1,0 +1,360 @@
+### Import Machine API - REST Client Collection
+
+# Environment Variables
+@baseUrl = http://localhost:5000
+@authToken = 
+
+### ========================================
+### AUTHENTICATION
+### ========================================
+
+### Sign Up
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}
+
+### Sign In
+# @name signin
+POST {{baseUrl}}/api/auth/signin
+Content-Type: application/json
+
+{
+  "email": "TomIgnatiev",
+  "password": "@ns6irakDbFzQG7"
+}
+
+### Change Password
+POST {{baseUrl}}/api/auth/change-password
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "currentPassword": "password123",
+  "newPassword": "newpassword123",
+  "confirmPassword": "newpassword123"
+}
+
+### ========================================
+### CONFIGURATION
+### ========================================
+
+### Get Configuration
+GET {{baseUrl}}/api/config
+Authorization: Bearer {{authToken}}
+
+### Update Configuration (POST)
+POST {{baseUrl}}/api/config
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "archiveWebUI": "https://archive.example.com",
+  "apiToken": "PWSAK2qDv8rI4=",
+  "customerGUID": "test-guid-123",
+  "s3Settings": {
+    "accessKeyId": "test",
+    "secretAccessKey": "test",
+    "bucketName": "my-s3-bucket"
+  }
+}
+
+### Replace Configuration (PUT)
+PUT {{baseUrl}}/api/config
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "archiveWebUI": "https://archive.example.com",
+  "apiToken": "PWSAK2qDv8rI4=",
+  "customerGUID": "test-guid-123",
+  "s3Settings": {
+    "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+    "secretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "bucketName": "my-s3-bucket"
+  }
+}
+
+### Reset Configuration
+DELETE {{baseUrl}}/api/config
+Authorization: Bearer {{authToken}}
+
+### ========================================
+### S3 BUCKETS
+### ========================================
+
+### List S3 Buckets
+GET {{baseUrl}}/api/s3-buckets
+Authorization: Bearer {{authToken}}
+
+### Get S3 Bucket
+GET {{baseUrl}}/api/s3-buckets/1
+Authorization: Bearer {{authToken}}
+
+### Create S3 Bucket
+POST {{baseUrl}}/api/s3-buckets
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "test-bucket-123",
+  "region": "us-east-1",
+  "description": "Test bucket for API testing"
+}
+
+### Update S3 Bucket
+PUT {{baseUrl}}/api/s3-buckets/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "updated-bucket-name",
+  "region": "us-west-2",
+  "description": "Updated bucket description"
+}
+
+### Delete S3 Bucket
+DELETE {{baseUrl}}/api/s3-buckets/1
+Authorization: Bearer {{authToken}}
+
+### Get Bucket Objects
+GET {{baseUrl}}/api/s3-buckets/test-bucket/objects
+Authorization: Bearer {{authToken}}
+
+### Test S3 Connection
+GET {{baseUrl}}/api/s3-buckets/test-connection
+Authorization: Bearer {{authToken}}
+
+### ========================================
+### INGESTION POINTS
+### ========================================
+
+### List Ingestion Points
+GET {{baseUrl}}/api/ingestion-points
+Authorization: Bearer {{authToken}}
+
+### Get Ingestion Point
+GET {{baseUrl}}/api/ingestion-points/1
+Authorization: Bearer {{authToken}}
+
+### Create Ingestion Point
+POST {{baseUrl}}/api/ingestion-points
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Test Ingestion Point",
+  "type": "importS3",
+  "description": "Test ingestion point for API testing",
+  "config": {
+    "bucketName": "test-bucket",
+    "region": "us-east-1"
+  }
+}
+
+### Update Ingestion Point
+PUT {{baseUrl}}/api/ingestion-points/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Updated Ingestion Point",
+  "type": "importS3",
+  "description": "Updated description",
+  "config": {
+    "bucketName": "updated-bucket",
+    "region": "us-west-2"
+  }
+}
+
+### Delete Ingestion Point
+DELETE {{baseUrl}}/api/ingestion-points/1
+Authorization: Bearer {{authToken}}
+
+### Test Connection
+POST {{baseUrl}}/api/ingestion-points/test-connection
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "archiveWebUI": "https://archive.example.com",
+  "apiToken": "PWSAK2qDv8rI4="
+}
+
+### ========================================
+### IMPORT JOBS
+### ========================================
+
+### List Import Jobs
+GET {{baseUrl}}/api/import-jobs
+Authorization: Bearer {{authToken}}
+
+### Get Import Job
+GET {{baseUrl}}/api/import-jobs/1
+Authorization: Bearer {{authToken}}
+
+### Create Import Job
+POST {{baseUrl}}/api/import-jobs
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Test Import Job",
+  "description": "Test import job for API testing",
+  "ingestionPointId": 1,
+  "s3BucketId": 1,
+  "config": {
+    "sourcePath": "/test/path",
+    "destinationPath": "/archive/path"
+  }
+}
+
+### Update Import Job
+PUT {{baseUrl}}/api/import-jobs/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Updated Import Job",
+  "description": "Updated description",
+  "ingestionPointId": 1,
+  "s3BucketId": 1,
+  "config": {
+    "sourcePath": "/updated/path",
+    "destinationPath": "/archive/updated/path"
+  }
+}
+
+### Delete Import Job
+DELETE {{baseUrl}}/api/import-jobs/1
+Authorization: Bearer {{authToken}}
+
+### Start Import Job
+POST {{baseUrl}}/api/import-jobs/1/start
+Authorization: Bearer {{authToken}}
+
+### Stop Import Job
+POST {{baseUrl}}/api/import-jobs/1/stop
+Authorization: Bearer {{authToken}}
+
+### ========================================
+### IMPORT JOB BATCHES
+### ========================================
+
+### List Import Job Batches
+GET {{baseUrl}}/api/import-job-batches
+Authorization: Bearer {{authToken}}
+
+### Get Import Job Batch
+GET {{baseUrl}}/api/import-job-batches/1
+Authorization: Bearer {{authToken}}
+
+### Create Import Job Batch
+POST {{baseUrl}}/api/import-job-batches
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Test Batch",
+  "description": "Test batch for API testing",
+  "importJobId": 1,
+  "config": {
+    "batchSize": 100,
+    "priority": "normal"
+  }
+}
+
+### Update Import Job Batch
+PUT {{baseUrl}}/api/import-job-batches/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Updated Batch",
+  "description": "Updated batch description",
+  "importJobId": 1,
+  "config": {
+    "batchSize": 200,
+    "priority": "high"
+  }
+}
+
+### Delete Import Job Batch
+DELETE {{baseUrl}}/api/import-job-batches/1
+Authorization: Bearer {{authToken}}
+
+### ========================================
+### HEALTH & SYSTEM
+### ========================================
+
+### Health Check
+GET {{baseUrl}}/api/health
+
+### AWS Auth Test
+POST {{baseUrl}}/api/aws-auth
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+  "secretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+  "region": "us-east-1"
+}
+
+### ========================================
+### ENVIRONMENT SETUP
+### ========================================
+
+### Set Auth Token (run after signin)
+# After running the signin request, copy the token from the response
+# and set it in the @authToken variable above, or use this request:
+
+# @name setAuthToken
+POST {{baseUrl}}/api/auth/signin
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### ========================================
+### TESTING WORKFLOW
+### ========================================
+
+### 1. Health Check (verify server is running)
+GET {{baseUrl}}/api/health
+
+### 2. Sign In (get auth token)
+# @name signin
+POST {{baseUrl}}/api/auth/signin
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### 3. Get Configuration (test auth)
+GET {{baseUrl}}/api/config
+Authorization: Bearer {{signin.response.body.token}}
+
+### 4. Test Configuration Update (debug 400 error)
+PUT {{baseUrl}}/api/config
+Content-Type: application/json
+Authorization: Bearer {{signin.response.body.token}}
+
+{
+  "archiveWebUI": "https://archive.example.com",
+  "apiToken": "PWSAK2qDv8rI4=",
+  "customerGUID": "test-guid-123",
+  "s3Settings": {
+    "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+    "secretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "bucketName": "my-s3-bucket"
+  }
+}

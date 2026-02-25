@@ -1,0 +1,188 @@
+### Test Import Files API Endpoints
+
+### Variables
+@BACKEND_API_BASE = http://localhost:5000
+@API_TOKEN = your_auth_token_here
+@IMPORT_ID = 123e4567-e89b-12d3-a456-426614174000
+@SHA256_HASH = a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456
+
+### 1. Create a new import file
+POST {{BACKEND_API_BASE}}/api/import-files
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "path": "emails/2024/01/email_001.eml",
+  "size_bytes": 1024000,
+  "sha256": "{{SHA256_HASH}}",
+  "status": 0,
+  "attempt_count": 0
+}
+
+### 2. Get all import files with pagination
+GET {{BACKEND_API_BASE}}/api/import-files?page=1&limit=10
+Authorization: Bearer {{API_TOKEN}}
+
+### 3. Get all import files with filtering
+GET {{BACKEND_API_BASE}}/api/import-files?status=0&import_id={{IMPORT_ID}}
+Authorization: Bearer {{API_TOKEN}}
+
+### 4. Get files by SHA256
+GET {{BACKEND_API_BASE}}/api/import-files?sha256={{SHA256_HASH}}
+Authorization: Bearer {{API_TOKEN}}
+
+### 5. Get a specific import file by ID (replace with actual file ID)
+GET {{BACKEND_API_BASE}}/api/import-files/1
+Authorization: Bearer {{API_TOKEN}}
+
+### 6. Update import file status to queued
+PATCH {{BACKEND_API_BASE}}/api/import-files/1/status
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "status": 1
+}
+
+### 7. Update import file status to processing
+PATCH {{BACKEND_API_BASE}}/api/import-files/1/status
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "status": 2
+}
+
+### 8. Mark import file as ingested
+PATCH {{BACKEND_API_BASE}}/api/import-files/1/ingest
+Authorization: Bearer {{API_TOKEN}}
+
+### 9. Mark import file as failed with error message
+PATCH {{BACKEND_API_BASE}}/api/import-files/1/fail
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "error_message": "Failed to process EML file: Invalid message format detected"
+}
+
+### 10. Mark import file as skipped due to deduplication
+PATCH {{BACKEND_API_BASE}}/api/import-files/1/skip-dedup
+Authorization: Bearer {{API_TOKEN}}
+
+### 11. Mark import file as quarantined
+PATCH {{BACKEND_API_BASE}}/api/import-files/1/quarantine
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "reason": "File contains suspicious content patterns"
+}
+
+### 12. Update entire import file
+PUT {{BACKEND_API_BASE}}/api/import-files/1
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "path": "emails/2024/01/email_001.eml",
+  "size_bytes": 1024000,
+  "sha256": "{{SHA256_HASH}}",
+  "status": 3,
+  "ingested_at": "2024-01-15T10:15:30Z",
+  "attempt_count": 1,
+  "last_error": null
+}
+
+### 13. Delete an import file (only if not processing)
+DELETE {{BACKEND_API_BASE}}/api/import-files/1
+Authorization: Bearer {{API_TOKEN}}
+
+### 14. Get queue files for an import
+GET {{BACKEND_API_BASE}}/api/import-files/queue/{{IMPORT_ID}}
+Authorization: Bearer {{API_TOKEN}}
+
+### 15. Get statistics for an import
+GET {{BACKEND_API_BASE}}/api/import-files/stats/{{IMPORT_ID}}
+Authorization: Bearer {{API_TOKEN}}
+
+### 16. Test validation - invalid import ID
+POST {{BACKEND_API_BASE}}/api/import-files
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "invalid-uuid",
+  "path": "test.eml",
+  "sha256": "{{SHA256_HASH}}",
+  "status": 99
+}
+
+### 17. Test validation - invalid SHA256
+POST {{BACKEND_API_BASE}}/api/import-files
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "path": "test.eml",
+  "sha256": "invalid-sha256",
+  "status": 0
+}
+
+### 18. Test validation - empty path
+POST {{BACKEND_API_BASE}}/api/import-files
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "path": "",
+  "sha256": "{{SHA256_HASH}}",
+  "status": 0
+}
+
+### 19. Create multiple import files for testing
+POST {{BACKEND_API_BASE}}/api/import-files
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "path": "emails/2024/01/email_002.eml",
+  "size_bytes": 2048000,
+  "sha256": "b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567",
+  "status": 0,
+  "attempt_count": 0
+}
+
+### 20. Create another import file
+POST {{BACKEND_API_BASE}}/api/import-files
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "path": "emails/2024/01/email_003.eml",
+  "size_bytes": 512000,
+  "sha256": "c3d4e5f6789012345678901234567890abcdef1234567890abcdef12345678",
+  "status": 1,
+  "attempt_count": 0
+}
+
+### 21. Create a failed import file
+POST {{BACKEND_API_BASE}}/api/import-files
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "path": "emails/2024/01/email_004.eml",
+  "size_bytes": 256000,
+  "sha256": "d4e5f6789012345678901234567890abcdef1234567890abcdef123456789",
+  "status": 4,
+  "attempt_count": 3,
+  "last_error": "File corrupted during transfer"
+}

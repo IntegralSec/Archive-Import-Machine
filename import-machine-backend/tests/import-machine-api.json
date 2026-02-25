@@ -1,0 +1,576 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "Import Machine API",
+  "dateExported": "2024-01-01T00:00:00.000Z",
+  "version": "1.1",
+  "folders": [
+    {
+      "name": "Authentication",
+      "items": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/signup",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "email": "test@example.com",
+                "password": "password123",
+                "confirmPassword": "password123"
+              }
+            }
+          }
+        },
+        {
+          "name": "Sign In",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/signin",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "email": "test@example.com",
+                "password": "password123"
+              }
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/change-password",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "currentPassword": "password123",
+                "newPassword": "newpassword123",
+                "confirmPassword": "newpassword123"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Configuration",
+      "items": [
+        {
+          "name": "Get Configuration",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/config",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Update Configuration (POST)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/config",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "archiveWebUI": "https://archive.example.com",
+                "apiToken": "PWSAK2qDv8rI4=",
+                "customerGUID": "test-guid-123",
+                "s3Settings": {
+                  "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+                  "secretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+                  "bucketName": "my-s3-bucket"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Replace Configuration (PUT)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/config",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "archiveWebUI": "https://archive.example.com",
+                "apiToken": "PWSAK2qDv8rI4=",
+                "customerGUID": "test-guid-123",
+                "s3Settings": {
+                  "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+                  "secretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+                  "bucketName": "my-s3-bucket"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Reset Configuration",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/config",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "S3 Buckets",
+      "items": [
+        {
+          "name": "List S3 Buckets",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/s3-buckets",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Get S3 Bucket",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/s3-buckets/1",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Create S3 Bucket",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/s3-buckets",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "name": "test-bucket-123",
+                "region": "us-east-1",
+                "description": "Test bucket for API testing"
+              }
+            }
+          }
+        },
+        {
+          "name": "Update S3 Bucket",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/s3-buckets/1",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "name": "updated-bucket-name",
+                "region": "us-west-2",
+                "description": "Updated bucket description"
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete S3 Bucket",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/s3-buckets/1",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Get Bucket Objects",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/s3-buckets/test-bucket/objects",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Test S3 Connection",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/s3-buckets/test-connection",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ingestion Points",
+      "items": [
+        {
+          "name": "List Ingestion Points",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/ingestion-points",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Get Ingestion Point",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/ingestion-points/1",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Create Ingestion Point",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/ingestion-points",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "name": "Test Ingestion Point",
+                "type": "importS3",
+                "description": "Test ingestion point for API testing",
+                "config": {
+                  "bucketName": "test-bucket",
+                  "region": "us-east-1"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Ingestion Point",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/ingestion-points/1",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "name": "Updated Ingestion Point",
+                "type": "importS3",
+                "description": "Updated description",
+                "config": {
+                  "bucketName": "updated-bucket",
+                  "region": "us-west-2"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete Ingestion Point",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/ingestion-points/1",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Test Connection",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/ingestion-points/test-connection",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "archiveWebUI": "https://archive.example.com",
+                "apiToken": "PWSAK2qDv8rI4="
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Import Jobs",
+      "items": [
+        {
+          "name": "List Import Jobs",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/import-jobs",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Get Import Job",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/import-jobs/1",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Create Import Job",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/import-jobs",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "name": "Test Import Job",
+                "description": "Test import job for API testing",
+                "ingestionPointId": 1,
+                "s3BucketId": 1,
+                "config": {
+                  "sourcePath": "/test/path",
+                  "destinationPath": "/archive/path"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Import Job",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/import-jobs/1",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "name": "Updated Import Job",
+                "description": "Updated description",
+                "ingestionPointId": 1,
+                "s3BucketId": 1,
+                "config": {
+                  "sourcePath": "/updated/path",
+                  "destinationPath": "/archive/updated/path"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete Import Job",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/import-jobs/1",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Start Import Job",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/import-jobs/1/start",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Stop Import Job",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/import-jobs/1/stop",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Import Job Batches",
+      "items": [
+        {
+          "name": "List Import Job Batches",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/import-job-batches",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Get Import Job Batch",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/import-job-batches/1",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        },
+        {
+          "name": "Create Import Job Batch",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/import-job-batches",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "name": "Test Batch",
+                "description": "Test batch for API testing",
+                "importJobId": 1,
+                "config": {
+                  "batchSize": 100,
+                  "priority": "normal"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Import Job Batch",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/import-job-batches/1",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "name": "Updated Batch",
+                "description": "Updated batch description",
+                "importJobId": 1,
+                "config": {
+                  "batchSize": 200,
+                  "priority": "high"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete Import Job Batch",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/import-job-batches/1",
+            "headers": {
+              "Authorization": "Bearer {{authToken}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health & System",
+      "items": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/health",
+            "headers": {}
+          }
+        },
+        {
+          "name": "AWS Auth Test",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/aws-auth",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{authToken}}"
+            },
+            "body": {
+              "mode": "json",
+              "json": {
+                "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+                "secretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+                "region": "us-east-1"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "name": "Local Development",
+      "data": [
+        {
+          "name": "baseUrl",
+          "value": "http://localhost:5000"
+        },
+        {
+          "name": "authToken",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "Production",
+      "data": [
+        {
+          "name": "baseUrl",
+          "value": "https://your-production-domain.com"
+        },
+        {
+          "name": "authToken",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}

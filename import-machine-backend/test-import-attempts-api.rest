@@ -1,0 +1,123 @@
+### Test Import Attempts API Endpoints
+
+### Variables
+@BACKEND_API_BASE = http://localhost:5000
+@API_TOKEN = your_auth_token_here
+@IMPORT_ID = 123e4567-e89b-12d3-a456-426614174000
+
+### 1. Create a new import attempt
+POST {{BACKEND_API_BASE}}/api/import-attempts
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "started_at": "2024-01-15T10:00:00Z",
+  "status": 0,
+  "error_summary": null
+}
+
+### 2. Get all import attempts with pagination
+GET {{BACKEND_API_BASE}}/api/import-attempts?page=1&limit=10
+Authorization: Bearer {{API_TOKEN}}
+
+### 3. Get all import attempts with filtering
+GET {{BACKEND_API_BASE}}/api/import-attempts?status=0&import_id={{IMPORT_ID}}
+Authorization: Bearer {{API_TOKEN}}
+
+### 4. Get a specific import attempt by ID (replace with actual attempt ID)
+GET {{BACKEND_API_BASE}}/api/import-attempts/1
+Authorization: Bearer {{API_TOKEN}}
+
+### 5. Update import attempt status to running
+PATCH {{BACKEND_API_BASE}}/api/import-attempts/1/status
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "status": 1
+}
+
+### 6. Mark import attempt as completed
+PATCH {{BACKEND_API_BASE}}/api/import-attempts/1/complete
+Authorization: Bearer {{API_TOKEN}}
+
+### 7. Mark import attempt as failed with error summary
+PATCH {{BACKEND_API_BASE}}/api/import-attempts/1/fail
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "error_summary": "Failed to process file: Invalid EML format detected in file 'email_001.eml'"
+}
+
+### 8. Mark import attempt as cancelled
+PATCH {{BACKEND_API_BASE}}/api/import-attempts/1/cancel
+Authorization: Bearer {{API_TOKEN}}
+
+### 9. Update entire import attempt
+PUT {{BACKEND_API_BASE}}/api/import-attempts/1
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "started_at": "2024-01-15T10:00:00Z",
+  "ended_at": "2024-01-15T10:15:30Z",
+  "status": 2,
+  "error_summary": null
+}
+
+### 10. Delete an import attempt (only if not running)
+DELETE {{BACKEND_API_BASE}}/api/import-attempts/1
+Authorization: Bearer {{API_TOKEN}}
+
+### 11. Test validation - invalid import ID
+POST {{BACKEND_API_BASE}}/api/import-attempts
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "invalid-uuid",
+  "status": 99
+}
+
+### 12. Test validation - invalid attempt ID
+GET {{BACKEND_API_BASE}}/api/import-attempts/invalid-id
+Authorization: Bearer {{API_TOKEN}}
+
+### 13. Test validation - ended_at before started_at
+POST {{BACKEND_API_BASE}}/api/import-attempts
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "started_at": "2024-01-15T10:00:00Z",
+  "ended_at": "2024-01-15T09:00:00Z",
+  "status": 2
+}
+
+### 14. Create multiple import attempts for testing
+POST {{BACKEND_API_BASE}}/api/import-attempts
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "started_at": "2024-01-15T11:00:00Z",
+  "status": 1
+}
+
+### 15. Create another import attempt
+POST {{BACKEND_API_BASE}}/api/import-attempts
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "import_id": "{{IMPORT_ID}}",
+  "started_at": "2024-01-15T12:00:00Z",
+  "ended_at": "2024-01-15T12:05:00Z",
+  "status": 3,
+  "error_summary": "Connection timeout to S3 bucket"
+}

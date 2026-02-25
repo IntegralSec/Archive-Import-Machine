@@ -1,0 +1,33 @@
+### Test S3 Upload API Endpoints
+
+### 1. Test S3 Connection
+GET {{BACKEND_API_BASE}}/api/s3-buckets/test-connection
+Authorization: Bearer {{API_TOKEN}}
+
+### 2. List S3 Buckets
+GET {{BACKEND_API_BASE}}/api/s3-buckets
+Authorization: Bearer {{API_TOKEN}}
+
+### 3. Create a Test Folder in S3 Bucket
+POST {{BACKEND_API_BASE}}/api/s3-buckets/test-bucket/create-folder
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "folderPath": "test-uploads/"
+}
+
+### 4. Upload a Test File to S3 Bucket
+POST {{BACKEND_API_BASE}}/api/s3-buckets/test-bucket/upload
+Authorization: Bearer {{API_TOKEN}}
+Content-Type: application/json
+
+{
+  "key": "test-uploads/test-file.txt",
+  "fileBuffer": "SGVsbG8gV29ybGQh",
+  "contentType": "text/plain"
+}
+
+### 5. List Objects in Bucket
+GET {{BACKEND_API_BASE}}/api/s3-buckets/test-bucket/objects
+Authorization: Bearer {{API_TOKEN}}

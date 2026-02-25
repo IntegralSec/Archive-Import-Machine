@@ -1,0 +1,64 @@
+# Import Machine - Full stack (frontend, backend, PostgreSQL)
+# Setup: Run setup-env.ps1 or copy .env.example to .env and import-machine-backend/env.example to import-machine-backend/.env
+# Usage: docker compose up -d
+# LAN access: Frontend and backend bind to 0.0.0.0; use http://<your-ip>:3000 from other devices
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: import-machine-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-importmachine}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-importmachine_secret}
+      POSTGRES_DB: ${DB_NAME:-import-machine}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-importmachine} -d ${DB_NAME:-import-machine}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./import-machine-backend
+      dockerfile: Dockerfile
+    container_name: import-machine-backend
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:${BACKEND_PORT:-5000}:5000"
+    env_file:
+      - ./import-machine-backend/.env
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 5000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-import-machine}
+      DB_USER: ${DB_USER:-importmachine}
+      DB_PASSWORD: ${DB_PASSWORD:-importmachine_secret}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_jwt_key_change_in_production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./import-machine-frontend
+      dockerfile: Dockerfile
+      args:
+        # Empty = use relative URLs; nginx proxies /api to backend (avoids CORS, works from any host)
+        REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL:-}
+    container_name: import-machine-frontend
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
