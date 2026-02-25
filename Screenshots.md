@@ -8,7 +8,7 @@
 <img width="3840" height="2160" alt="image" src="https://github.com/user-attachments/assets/4539b8a0-1b02-40ce-b4f3-99baca35eb02" />
 
 ## Config
-<img width="3840" height="2588" alt="image" src="https://github.com/user-attachments/assets/1395e5f8-4100-4177-80d5-79423b22770e" />
+<img width="3840" height="2160" alt="image" src="https://github.com/user-attachments/assets/83f579b0-43d4-460a-b9aa-e65d8758f666" />
 
 ## Ingestion Points
 <img width="3840" height="2160" alt="image" src="https://github.com/user-attachments/assets/fc5b3081-b831-429f-920e-3c8ea5a60126" />
