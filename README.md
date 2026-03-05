@@ -56,9 +56,7 @@ Edit `.env` and `import-machine-backend/.env` with your settings (Archive URL, A
 docker compose up -d
 ```
 
-The app will be available at:
-- **Frontend:** http://localhost:3000
-- **Backend API:** http://localhost:5000
+The app will be available at **http://localhost:3000**. The frontend is exposed on the LAN at `http://<your-ip>:3000`.
 
 To rebuild after code changes:
 
@@ -81,15 +79,15 @@ docker compose up -d --build
 ```
 import-machine/
 ├── import-machine-frontend/   # React frontend
-├── import-machine-backend/    # Node.js API
-├── docker-compose.yml         # Full stack orchestration
-├── .env.example               # Root env template
-└── setup-env.ps1              # Windows setup script
+├── import-machine-backend/   # Node.js API
+├── docker-compose.yml        # Full stack orchestration
+├── .env.example              # Root env template
+└── setup-env.ps1             # Windows setup script
 ```
 
 ## LAN Access
 
-Frontend and backend bind to `0.0.0.0`, so you can access the app from other devices on your network at `http://<your-ip>:3000`. Set `FRONTEND_URL` in `.env` to your LAN IP if needed.
+The frontend binds to `0.0.0.0:3000`, so it's accessible from other devices at `http://<your-ip>:3000` or `http://import.home.arpa:3000`. Set `FRONTEND_URL` in `.env` to your access URL (e.g. `http://import.home.arpa:3000`) for CORS.
 
 ## License
 

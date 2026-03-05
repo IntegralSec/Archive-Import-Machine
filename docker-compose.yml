@@ -1,7 +1,7 @@
 # Import Machine - Full stack (frontend, backend, PostgreSQL)
 # Setup: Run setup-env.ps1 or copy .env.example to .env and import-machine-backend/env.example to import-machine-backend/.env
 # Usage: docker compose up -d
-# LAN access: Frontend and backend bind to 0.0.0.0; use http://<your-ip>:3000 from other devices
+# Access: http://localhost:3000 or http://<lan-ip>:3000 (frontend exposed on LAN)
 
 services:
   postgres:
@@ -12,8 +12,6 @@ services:
       POSTGRES_USER: ${DB_USER:-importmachine}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-importmachine_secret}
       POSTGRES_DB: ${DB_NAME:-import-machine}
-    ports:
-      - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -28,8 +26,6 @@ services:
       dockerfile: Dockerfile
     container_name: import-machine-backend
     restart: unless-stopped
-    ports:
-      - "0.0.0.0:${BACKEND_PORT:-5000}:5000"
     env_file:
       - ./import-machine-backend/.env
     environment:

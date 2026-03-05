@@ -501,9 +501,6 @@ function Config() {
                 <strong>Backend API:</strong> {BACKEND_API_BASE}
               </Typography>
               <Typography variant="body2" sx={{ mt: 1 }}>
-                Configuration is loaded from the backend API and automatically synchronized with the archive system.
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
                 <strong>Archive Configuration:</strong> {localArchiveWebUI && apiToken ? '✅ Configured' : '⚠️ Not configured'}
               </Typography>
               <Typography variant="body2" sx={{ mt: 1 }}>
@@ -514,14 +511,6 @@ function Config() {
                     ? '⚠️ Partially configured'
                     : '❌ Not configured'
                 }
-              </Typography>
-              {s3Settings.accessKeyId && (
-                <Typography variant="body2" sx={{ mt: 0.5, color: 'text.secondary' }}>
-                  Access Key: {s3Settings.accessKeyId.substring(0, 8)}...
-                </Typography>
-              )}
-              <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
-                <strong>Last Updated:</strong> Configuration loaded from server on page load
               </Typography>
             </Alert>
           </CardContent>

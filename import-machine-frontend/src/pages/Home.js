@@ -4,9 +4,20 @@ import {
   Card,
   CardContent,
   Box,
-  Chip
+  Link,
 } from '@mui/material';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { Link as RouterLink } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+
+const FLOW_STEPS = [
+  { text: 'Config', path: '/config' },
+  { text: 'Create ingestion point', path: '/ingestion-points' },
+  { text: 'Create import job', path: '/import-jobs' },
+  { text: 'Package EML files into batches', path: null },
+  { text: 'Upload batches to an S3 bucket', path: '/upload' },
+  { text: 'Start importing the batches', path: '/s3-bucket' },
+];
 
 function Home() {
   const { isDarkMode } = useTheme();
@@ -23,12 +34,80 @@ function Home() {
             <Typography variant="body1" color="text.secondary" paragraph>
              This web app will help you import EML files into your archive.
             </Typography>
-            <Box sx={{ mt: 2 }}>
-              <Chip 
-                label={`Current Theme: ${isDarkMode ? 'Dark' : 'Light'}`}
-                color={isDarkMode ? 'primary' : 'secondary'}
-                variant="outlined"
-              />
+          </CardContent>
+        </Card>
+
+        {/* Flow Chart Section */}
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              How It Works
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                py: 2,
+              }}
+            >
+              {FLOW_STEPS.map((step, index) => (
+                <React.Fragment key={step.text}>
+                  {step.path ? (
+                    <Link
+                      component={RouterLink}
+                      to={step.path}
+                      underline="none"
+                      sx={{
+                        display: 'block',
+                        px: 3,
+                        py: 1.5,
+                        borderRadius: 2,
+                        border: 2,
+                        borderColor: 'primary.main',
+                        bgcolor: isDarkMode ? 'rgba(25, 118, 210, 0.12)' : 'rgba(25, 118, 210, 0.08)',
+                        width: 320,
+                        minWidth: 320,
+                        textAlign: 'left',
+                        color: 'inherit',
+                        '&:hover': {
+                          bgcolor: isDarkMode ? 'rgba(25, 118, 210, 0.2)' : 'rgba(25, 118, 210, 0.15)',
+                        },
+                      }}
+                    >
+                      <Typography variant="body1" fontWeight={600}>
+                        {index + 1}. {step.text}
+                      </Typography>
+                    </Link>
+                  ) : (
+                    <Box
+                      sx={{
+                        px: 3,
+                        py: 1.5,
+                        borderRadius: 2,
+                        border: 2,
+                        borderColor: 'primary.main',
+                        bgcolor: isDarkMode ? 'rgba(25, 118, 210, 0.12)' : 'rgba(25, 118, 210, 0.08)',
+                        width: 320,
+                        minWidth: 320,
+                        textAlign: 'left',
+                      }}
+                    >
+                      <Typography variant="body1" fontWeight={600}>
+                        {index + 1}. {step.text}
+                      </Typography>
+                    </Box>
+                  )}
+                  {index < FLOW_STEPS.length - 1 && (
+                    <Box sx={{ py: 0.5 }}>
+                      <ArrowDownwardIcon
+                        sx={{ color: 'primary.main', fontSize: 28 }}
+                        aria-hidden
+                      />
+                    </Box>
+                  )}
+                </React.Fragment>
+              ))}
             </Box>
           </CardContent>
         </Card>
