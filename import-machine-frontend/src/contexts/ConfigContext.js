@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { BACKEND_API_BASE } from '../config';
+import { useAuth } from './AuthContext';
 
 const ConfigContext = createContext();
 
@@ -11,7 +12,24 @@ export const useConfig = () => {
   return context;
 };
 
+function applyConfigFromResponse(data) {
+  const d = data || {};
+  const s3 = d.s3Settings || {};
+  return {
+    archiveWebUI: d.archiveWebUI ?? '',
+    apiToken: d.apiToken ?? '',
+    customerGUID: d.customerGUID ?? '',
+    s3Settings: {
+      accessKeyId: s3.accessKeyId ?? '',
+      secretAccessKey: s3.secretAccessKey ?? '',
+    },
+  };
+}
+
 export const ConfigProvider = ({ children }) => {
+  const { token } = useAuth();
+  const prevTokenRef = useRef(undefined);
+
   const [archiveWebUI, setArchiveWebUI] = useState('');
   const [apiToken, setApiToken] = useState('');
   const [customerGUID, setCustomerGUID] = useState('');
@@ -21,27 +39,19 @@ export const ConfigProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(true);
 
-  // Load configuration from backend on mount
-  useEffect(() => {
-    loadBackendConfig();
-  }, []);
-
   const loadBackendConfig = useCallback(async () => {
+    const authToken = token ?? localStorage.getItem('authToken');
     setLoading(true);
     try {
-      // Get auth token from localStorage
-      const token = localStorage.getItem('authToken');
-      
-      if (!token) {
+      if (!authToken) {
         console.log('No auth token found, skipping config load');
-        setLoading(false);
         return;
       }
 
       const response = await fetch(`${BACKEND_API_BASE}/api/config`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json'
         }
       });
@@ -49,40 +59,22 @@ export const ConfigProvider = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         if (data.success && data.data) {
+          const applied = applyConfigFromResponse(data.data);
           console.log('Loading configuration from backend:', {
-            archiveWebUI: data.data.archiveWebUI ? 'set' : 'not set',
-            apiTokenLength: data.data.apiToken ? data.data.apiToken.length : 0,
-            apiTokenPrefix: data.data.apiToken ? data.data.apiToken.substring(0, 10) + '...' : 'none',
-            s3Settings: data.data.s3Settings ? {
-              accessKeyId: data.data.s3Settings.accessKeyId ? 'set (' + data.data.s3Settings.accessKeyId.substring(0, 8) + '...)' : 'not set',
-              secretAccessKey: data.data.s3Settings.secretAccessKey ? 'set (' + data.data.s3Settings.secretAccessKey.substring(0, 8) + '...)' : 'not set'
-            } : 'not present'
+            archiveWebUI: applied.archiveWebUI ? 'set' : 'not set',
+            apiTokenLength: applied.apiToken ? applied.apiToken.length : 0,
+            apiTokenPrefix: applied.apiToken ? applied.apiToken.substring(0, 10) + '...' : 'none',
+            s3Settings: {
+              accessKeyId: applied.s3Settings.accessKeyId ? 'set (' + applied.s3Settings.accessKeyId.substring(0, 8) + '...)' : 'not set',
+              secretAccessKey: applied.s3Settings.secretAccessKey ? 'set (' + applied.s3Settings.secretAccessKey.substring(0, 8) + '...)' : 'not set'
+            }
           });
 
-          // Update local state with backend config
-          if (data.data.archiveWebUI) {
-            setArchiveWebUI(data.data.archiveWebUI);
-          }
-          if (data.data.apiToken) {
-            setApiToken(data.data.apiToken);
-          }
-          if (data.data.customerGUID) {
-            setCustomerGUID(data.data.customerGUID);
-          }
-          if (data.data.s3Settings) {
-            // Always update S3 settings with backend values, even if they are empty strings
-            setS3Settings({
-              accessKeyId: data.data.s3Settings.accessKeyId || '',
-              secretAccessKey: data.data.s3Settings.secretAccessKey || ''
-            });
-          } else {
-            // If no S3 settings in response, reset to empty
-            setS3Settings({
-              accessKeyId: '',
-              secretAccessKey: ''
-            });
-          }
-          
+          setArchiveWebUI(applied.archiveWebUI);
+          setApiToken(applied.apiToken);
+          setCustomerGUID(applied.customerGUID);
+          setS3Settings(applied.s3Settings);
+
           console.log('Configuration loaded successfully from backend');
         }
       } else {
@@ -93,7 +85,33 @@ export const ConfigProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [BACKEND_API_BASE]);
+  }, [token, BACKEND_API_BASE]);
+
+  // Reload whenever the logged-in user changes; clear when logged out so another user never sees stale values
+  useEffect(() => {
+    if (!token) {
+      prevTokenRef.current = null;
+      setArchiveWebUI('');
+      setApiToken('');
+      setCustomerGUID('');
+      setS3Settings({ accessKeyId: '', secretAccessKey: '' });
+      setLoading(false);
+      return;
+    }
+
+    const prev = prevTokenRef.current;
+    prevTokenRef.current = token;
+    const switchedUser = prev != null && prev !== token;
+
+    if (switchedUser) {
+      setArchiveWebUI('');
+      setApiToken('');
+      setCustomerGUID('');
+      setS3Settings({ accessKeyId: '', secretAccessKey: '' });
+    }
+
+    loadBackendConfig();
+  }, [token, loadBackendConfig]);
 
   const updateArchiveWebUI = useCallback((value) => {
     console.log('ConfigContext: updateArchiveWebUI called with:', value);
